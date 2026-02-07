@@ -1,0 +1,241 @@
+/* Hero Section */
+.reminder-hero {
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(34, 197, 94, 0.1));
+    border-bottom: 2px solid rgba(96, 165, 250, 0.2);
+}
+
+/* Preset Reminders Cards */
+.preset-reminders {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.reminder-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.reminder-card:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.1);
+}
+
+.reminder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.reminder-header h5 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.1rem;
+}
+
+.reminder-header .form-check {
+    margin: 0;
+}
+
+.reminder-card p {
+    margin-bottom: 0.5rem;
+}
+
+.preset-message {
+    background: #e0f2fe;
+    border-left: 4px solid #0ea5e9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin: 0.75rem 0;
+    font-style: italic;
+    color: #0369a1;
+    font-size: 0.95rem;
+}
+
+.time-select,
+.time-day-select {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #cbd5e1;
+}
+
+.time-select label,
+.time-day-select label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.time-day-select .d-flex {
+    gap: 0.5rem;
+}
+
+/* Custom Reminder Form */
+.reminder-form-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.reminder-form-card .form-label {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.reminder-form-card .form-control,
+.reminder-form-card .form-select {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
+}
+
+.reminder-form-card .form-control:focus,
+.reminder-form-card .form-select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+}
+
+.reminder-form-card textarea {
+    font-family: inherit;
+    resize: vertical;
+}
+
+/* Active Reminders List */
+.reminders-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.reminder-item {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.reminder-item:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
+}
+
+.reminder-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.reminder-item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.reminder-item-badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #0369a1;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.reminder-item-message {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    color: #475569;
+    font-size: 0.95rem;
+    border-left: 3px solid #64748b;
+}
+
+.reminder-item-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.reminder-item-details i {
+    color: #60a5fa;
+    font-size: 1.1rem;
+}
+
+.reminder-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.reminder-item-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-mark-done {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.btn-mark-done:hover {
+    background: #bbf7d0;
+}
+
+.btn-delete-reminder {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.btn-delete-reminder:hover {
+    background: #fecaca;
+}
+
+/* Streak Badge */
+.streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reminder-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .time-day-select .d-flex {
+        flex-direction: column;
+    }
+
+    .reminders-list {
+        grid-template-columns: 1fr;
+    }
+}

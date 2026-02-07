@@ -1,0 +1,24 @@
+/* Auth page styles for BudgetBuddy */
+:root{
+  --bb-primary: #2563EB;
+  --bb-mint: #A7F3D0;
+  --bb-gold: #FACC15;
+  --bb-bg: #F3F4F6;
+  --bb-text: #1F2937;
+}
+body.auth-body{ background-color: var(--bb-bg); font-family: Poppins, system-ui, sans-serif; }
+.auth-container{ min-height:70vh; display:flex; align-items:center; justify-content:center; }
+.auth-card{ max-width:420px; width:100%; border-radius:14px; box-shadow:0 12px 30px rgba(31,41,55,0.08); padding:28px; background:#fff; }
+.brand{ font-weight:700; color:var(--bb-primary); }
+.brand span{ color:var(--bb-gold); }
+.auth-card .form-control:focus{ box-shadow:0 0 0 0.15rem rgba(37,99,235,0.12); border-color:var(--bb-primary); }
+.btn-primary-custom{ background:var(--bb-primary); border:none; box-shadow: 0 8px 18px rgba(37,99,235,0.12); }
+.btn-primary-custom:hover{ transform:translateY(-2px); }
+.muted-link{ color:#6b7280; font-size:0.95rem; }
+.divider{ display:flex; align-items:center; gap:.75rem; margin:1rem 0; }
+.divider::before, .divider::after{ content:''; flex:1; height:1px; background:#e6eefc; }
+.social-btn{ border-radius:8px; }
+.error-text{ color:#dc2626; font-size:0.9rem; margin-top:.35rem; display:none; }
+.show-error{ display:block; }
+.small-muted{ font-size:0.9rem; color:#6b7280; }
+.auth-footer{ font-size:0.9rem; color:#6b7280; text-align:center; margin-top:14px; }

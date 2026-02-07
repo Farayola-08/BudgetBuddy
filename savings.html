@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Savings — BudgetBuddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/style.css">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="/index.html">Budget<span style="color:#FACC15">Buddy</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/dashboard.html">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="/budgeting.html">Budgeting</a></li>
+            <li class="nav-item"><a class="nav-link" href="/index.html">Logout</a></li>
+            <li class="nav-item"><a class="nav-link" href="/reminders.html">Reminder</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Notification (savings) -->
+    <div id="savings-notification" class="bb-notification" aria-live="polite">
+      <div class="bb-notification-body">
+        <div id="savings-notification-text" class="bb-notification-text">&nbsp;</div>
+        <button id="savings-undo-btn" class="bb-undo-btn" style="display:none">Undo</button>
+        <button id="savings-close-btn" class="bb-close" aria-label="Close">✕</button>
+      </div>
+    </div>
+
+    <main class="container my-5">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card p-4">
+            <h5 class="mb-3">Savings Goal</h5>
+            <div class="mb-3">
+              <label class="form-label">Target amount</label>
+                <div class="input-group">
+                  <span class="input-group-text">₦</span>
+                  <input id="savingsGoal" type="number" min="0" step="1" aria-label="Savings target amount" class="form-control" placeholder="e.g. 50000">
+                </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Add deposit</label>
+              <div class="input-group">
+                <span class="input-group-text">₦</span>
+                  <input id="depositAmount" type="number" min="0" step="1" aria-label="Deposit amount" class="form-control" placeholder="e.g. 2000">
+                  <button id="addDeposit" type="button" class="btn btn-primary" disabled>Add</button>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button id="saveGoal" type="button" class="btn btn-outline-primary" disabled>Save Goal</button>
+              <button id="resetSavings" class="btn btn-outline-danger">Reset</button>
+            </div>
+          </div>
+
+          <div class="card p-3 mt-3">
+            <h6>History</h6>
+            <ul id="savingsHistory" class="list-group list-group-flush mt-2"></ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card p-4 text-center">
+            <h6 class="mb-3">Progress</h6>
+            <h3 id="savingsAmount">₦0</h3>
+            <div class="progress mt-3" style="height:18px;"><div id="savingsBar" class="progress-bar" role="progressbar" style="width:0%"></div></div>
+            <p class="small text-muted mt-2" id="savingsInfo">Set a goal to get started.</p>
+            <canvas id="savingsChart" style="max-width:320px;margin:18px auto 0;display:block"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-light py-3 mt-4">
+      <div class="container text-center small text-muted">© 2026 BudgetBuddy · R.E.G Innovators</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // savings data structure: { goal: number, saved: number, history: [{amount,date}] }
+      const SAV_KEY = 'budgetBuddy_savings';
+
+      function currency(n){ return '₦' + Number(n||0).toLocaleString(); }
+
+      function loadSavings(){
+        return JSON.parse(localStorage.getItem(SAV_KEY)||'null') || { goal:0, saved:0, history:[] };
+      }
+      function saveSavings(s){ localStorage.setItem(SAV_KEY, JSON.stringify(s)); localStorage.setItem('budgetBuddy_lastUpdate', Date.now()); window.dispatchEvent(new Event('budgetUpdated')); }
+
+      // chart
+      const ctx = document.getElementById('savingsChart').getContext('2d');
+      const dough = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: ['Saved','Remaining'], datasets:[{ data:[0,100], backgroundColor:['#2563EB','#E5E7EB'], hoverBackgroundColor:['#1e4ed8','#d1d5db'], borderWidth:0 }]},
+        options: { plugins:{legend:{display:true,position:'bottom'} }, cutout:'70%'}
+      });
+
+      function updateUI(){
+        const s = loadSavings();
+        document.getElementById('savingsAmount').innerText = currency(s.saved);
+        const pct = s.goal>0 ? Math.min(100, Math.round((s.saved/s.goal)*100)) : 0;
+        document.getElementById('savingsBar').style.width = pct + '%';
+        document.getElementById('savingsInfo').innerText = s.goal>0 ? `${pct}% of ${currency(s.goal)} goal` : 'Set a goal to get started.';
+        document.getElementById('savingsGoal').value = s.goal || '';
+
+        // history
+        const hist = document.getElementById('savingsHistory'); hist.innerHTML='';
+        if(!s.history || s.history.length===0){ hist.innerHTML = '<li class="list-group-item text-muted">No deposits yet.</li>'; }
+        else{ s.history.slice().reverse().forEach(h=>{ const li=document.createElement('li'); li.className='list-group-item d-flex justify-content-between align-items-center'; li.innerHTML = `<div><strong>${currency(h.amount)}</strong><div class="small text-muted">${new Date(h.date).toLocaleString()}</div></div><div class="small text-muted">`+ '</div>'; hist.appendChild(li); }); }
+
+        // chart
+        const rem = Math.max(0, (s.goal||0) - (s.saved||0));
+        dough.data.datasets[0].data = [s.saved || 0, rem];
+        dough.update();
+      }
+
+      // enable/disable save button based on value
+      const saveBtn = document.getElementById('saveGoal');
+      const goalInput = document.getElementById('savingsGoal');
+      goalInput.addEventListener('input', ()=>{ const v = Number(goalInput.value||0); saveBtn.disabled = !(v>0); });
+      document.getElementById('saveGoal').addEventListener('click', ()=>{
+        const v = Number(goalInput.value || 0);
+        const s = loadSavings(); s.goal = Math.max(0, v); saveSavings(s); updateUI();
+        showSavingsNotification('Savings goal saved');
+      });
+
+      // deposit input enable/disable
+      const depositInput = document.getElementById('depositAmount');
+      const depositBtn = document.getElementById('addDeposit');
+      depositInput.addEventListener('input', ()=>{ const v = Number(depositInput.value||0); depositBtn.disabled = !(v>0); });
+      document.getElementById('addDeposit').addEventListener('click', ()=>{
+        const amt = Number(depositInput.value || 0);
+        if(!amt || amt <= 0) return showSavingsNotification('Enter a positive amount');
+        const s = loadSavings(); s.saved = (s.saved||0) + amt; s.history = s.history || [];
+        const item = { amount: amt, date: new Date().toISOString() };
+        s.history.push(item);
+        // store last-added deposit for undo
+        localStorage.setItem('budgetBuddy_lastAddedSavings', JSON.stringify({ item: item }));
+        saveSavings(s);
+        updateUI();
+        depositInput.value = '';
+        depositInput.focus();
+        depositBtn.disabled = true;
+        showSavingsNotification('Deposit added', true);
+      });
+
+      document.getElementById('resetSavings').addEventListener('click', ()=>{
+        if(!confirm('Reset savings and history?')) return; localStorage.removeItem(SAV_KEY); localStorage.removeItem('budgetBuddy_lastUpdate'); window.dispatchEvent(new Event('budgetUpdated')); updateUI();
+      });
+
+      // init
+      updateUI();
+      // initialize button states
+      saveBtn.disabled = !(Number(goalInput.value||0) > 0);
+      depositBtn.disabled = true;
+
+      // savings notification helpers
+      const sNotify = document.getElementById('savings-notification');
+      const sText = document.getElementById('savings-notification-text');
+      const sUndo = document.getElementById('savings-undo-btn');
+      const sClose = document.getElementById('savings-close-btn');
+      let _savings_timeout = null;
+      function showSavingsNotification(text, showUndo){
+        sText.innerText = text;
+        if(showUndo) sUndo.style.display = 'inline-block'; else sUndo.style.display = 'none';
+        sNotify.classList.add('show');
+        clearTimeout(_savings_timeout);
+        _savings_timeout = setTimeout(()=>{ sNotify.classList.remove('show'); }, showUndo ? 7000 : 3000);
+      }
+      sClose.onclick = ()=>{ sNotify.classList.remove('show'); };
+
+      // undo last added deposit
+      function undoSavingsAdd(){
+        const saved = localStorage.getItem('budgetBuddy_lastAddedSavings');
+        if(!saved) return showSavingsNotification('Nothing to undo');
+        try{
+          const payload = JSON.parse(saved);
+          const store = loadSavings();
+          const idx = (store.history||[]).findIndex(h => h.date === payload.item.date && Number(h.amount) === Number(payload.item.amount));
+          if(idx === -1) return showSavingsNotification('Nothing to undo');
+          store.history.splice(idx, 1);
+          store.saved = Math.max(0, (store.saved||0) - Number(payload.item.amount || 0));
+          saveSavings(store);
+          localStorage.removeItem('budgetBuddy_lastAddedSavings');
+          updateUI();
+          showSavingsNotification('Deposit undone');
+        }catch(err){ console.error(err); showSavingsNotification('Unable to undo'); }
+      }
+      sUndo.addEventListener('click', undoSavingsAdd);
+
+      // initialize: hide notification by default
+      sNotify.classList.remove('show');
+
+      // listen for external updates
+      window.addEventListener('storage', function(e){ if(!e.key) return; if(e.key===SAV_KEY || e.key==='budgetBuddy_lastUpdate'){ updateUI(); } });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

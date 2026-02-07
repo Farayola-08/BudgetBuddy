@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard - BudgetBuddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand text-primary fw-bold" href="index.html"><span style="color: gold;">Budget</span>Buddy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link active" href="dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="savings.html">Savings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#resources">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD CONTENT -->
+    <div class="container-fluid dashboard-container">
+        
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="balance-card">
+                <div class="balance-ring">
+                    <div class="ring-container">
+                        <svg class="progress-ring" width="140" height="140" viewBox="0 0 140 140">
+                            <defs>
+                                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <circle class="progress-ring-circle" stroke="#e0e7ff" stroke-width="8" fill="transparent" r="58" cx="70" cy="70"/>
+                            <circle class="progress-ring-progress" stroke="url(#ringGradient)" stroke-width="8" fill="transparent" r="58" cx="70" cy="70" filter="url(#glow)"/>
+                        </svg>
+                        <div class="balance-content">
+                            <div class="balance-status-indicator" id="healthIndicator"></div>
+                            <div class="balance-amount" id="balanceAmount">₦0.00</div>
+                            <div class="balance-label">Current Balance</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary action-btn" id="addExpenseBtn">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Add Expense</span>
+                    </button>
+                    <button class="btn btn-success action-btn" id="saveMoneyBtn">
+                        <i class="bi bi-piggy-bank"></i>
+                        <span>Save Money</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN DASHBOARD GRID -->
+        <div class="dashboard-grid">
+            
+            <!-- SPENDING BREAKDOWN CHART -->
+            <div class="dashboard-card chart-card">
+                <div class="card-header-wrapper">
+                    <h3 class="card-title"><i class="bi bi-pie-chart-fill"></i> Spending Breakdown</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- AI INSIGHTS -->
+            <div class="dashboard-card ai-card">
+                <div class="ai-header">
+                    <div class="ai-icon-wrapper">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                    <h3 class="card-title">Smart Advisor</h3>
+                </div>
+                <div class="ai-content">
+                    <div class="ai-bubble">
+                        <p id="aiInsight">Based on your spending patterns, you could save $45 this month by reducing dining out expenses. Try cooking 2 more meals at home per week!</p>
+                    </div>
+                    <div class="ai-action">
+                        <button class="btn btn-sm btn-light">Learn More</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAVINGS GOALS -->
+            <div class="dashboard-card goals-card">
+                <div class="card-header-wrapper">
+                    <h3 class="card-title"><i class="bi bi-target"></i> Savings Goals</h3>
+                    <button class="btn btn-sm btn-outline-primary" id="addGoalBtn">+ Add Goal</button>
+                </div>
+                <div class="goals-list">
+                    <div class="goal-item" data-goal="emergency">
+                        <div class="goal-header">
+                            <div>
+                                <span class="goal-name">🏠 Emergency Fund</span>
+                                <div class="goal-amount">₦320 / ₦500</div>
+                            </div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-progress="64" style="background: linear-gradient(90deg, #3b82f6, #1d4ed8);"></div>
+                            </div>
+                            <span class="goal-details"><span class="percent">64%</span> complete • <span class="days">23</span> days to go</span>
+                        </div>
+                    </div>
+                    <div class="goal-item" data-goal="laptop">
+                        <div class="goal-header">
+                            <div>
+                                <span class="goal-name">💻 New Laptop</span>
+                                <div class="goal-amount">₦450 / ₦800</div>
+                            </div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-progress="56" style="background: linear-gradient(90deg, #8b5cf6, #6d28d9);"></div>
+                            </div>
+                            <span class="goal-details"><span class="percent">56%</span> complete • <span class="days">45</span> days to go</span>
+                        </div>
+                    </div>
+                    <div class="goal-item" data-goal="vacation">
+                        <div class="goal-header">
+                            <div>
+                                <span class="goal-name">✈️ Spring Break</span>
+                                <div class="goal-amount">₦180 / ₦600</div>
+                            </div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-progress="30" style="background: linear-gradient(90deg, #ec4899, #be185d);"></div>
+                            </div>
+                            <span class="goal-details"><span class="percent">30%</span> complete • <span class="days">67</span> days to go</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAMIFICATION WIDGET -->
+            <div class="dashboard-card challenge-card">
+                <h3 class="card-title"><i class="bi bi-zap-fill"></i> Active Challenge</h3>
+                <div class="challenge-content">
+                    <div class="challenge-ring">
+                        <svg class="challenge-progress" width="100" height="100" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="challengeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle stroke="#e0e7ff" stroke-width="6" fill="transparent" r="42" cx="50" cy="50"/>
+                            <circle class="challenge-progress-fill" stroke="url(#challengeGradient)" stroke-width="6" fill="transparent" r="42" cx="50" cy="50"/>
+                        </svg>
+                        <div class="challenge-percentage" id="challengePercent">73%</div>
+                    </div>
+                    <div class="challenge-details">
+                        <h4 id="challengeName">Coffee Shop Challenge</h4>
+                        <p id="challengeDesc">Skip coffee shops for 7 days</p>
+                        <div class="challenge-savings-box">
+                            <i class="bi bi-piggy-bank"></i>
+                            <span id="challengeSavings">Saved: ₦18.50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENT TRANSACTIONS -->
+            <div class="dashboard-card transactions-card">
+                <h3 class="card-title"><i class="bi bi-clock-history"></i> Recent Transactions</h3>
+                <div class="transactions-list">
+                    <div class="transaction-item">
+                        <div class="transaction-icon food">
+                            <i class="bi bi-cup-hot"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <span class="transaction-name">Starbucks</span>
+                            <span class="transaction-time">2 hours ago</span>
+                        </div>
+                        <span class="transaction-amount">₦4.75</span>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon transport">
+                            <i class="bi bi-bus-front"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <span class="transaction-name">Bus Pass</span>
+                            <span class="transaction-time">Yesterday</span>
+                        </div>
+                        <span class="transaction-amount">-2.50</span>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon shopping">
+                            <i class="bi bi-bag"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <span class="transaction-name">Grocery Store</span>
+                            <span class="transaction-time">2 days ago</span>
+                        </div>
+                        <span class="transaction-amount">-₦32.18</span>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon income">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <span class="transaction-name">Part-time Job</span>
+                            <span class="transaction-time">3 days ago</span>
+                        </div>
+                        <span class="transaction-amount income">+₦120.00</span>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="transaction-icon entertainment">
+                            <i class="bi bi-film"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <span class="transaction-name">Movie Tickets</span>
+                            <span class="transaction-time">4 days ago</span>
+                        </div>
+                        <span class="transaction-amount">-₦15.00</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/dashboard.js"></script>
+</body>
+</html>

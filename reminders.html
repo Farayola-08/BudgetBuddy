@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminders — BudgetBuddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="stylesheet" href="/CSS/reminders.css">
+    <link rel="stylesheet" href="/CSS/notifications.css">
+</head>
+<body>
+
+    <!-- Navbar with Notification Bell -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="/index.html">Budget<span style="color:#FACC15">Buddy</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/budgeting.html">Budgeting</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/savings.html">Savings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reminders.html" class="active">Reminders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                    <!-- Notification Bell -->
+                    <li class="nav-item ms-3">
+                        <div class="notification-bell-container">
+                            <button class="btn btn-link notification-bell" id="notificationBell" data-bs-toggle="offcanvas" data-bs-target="#notificationOffcanvas">
+                                <i class="bi bi-bell-fill"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notification Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas" aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="notificationOffcanvasLabel">📬 Your Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div id="notificationList" class="notification-list">
+                <p class="text-center text-muted p-3">No new notifications</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="py-5 text-center reminder-hero">
+        <div class="container">
+            <h1 class="display-5 fw-bold">🔔 Stay on Track with Reminders</h1>
+            <p class="lead text-light">Never miss a budget check-in or savings opportunity. Set reminders that work for you.</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div class="row">
+            <!-- Left Column: Preset Reminders -->
+            <div class="col-lg-6 mb-4">
+                <h3 class="mb-4">💡 Quick Setup</h3>
+                
+                <div class="preset-reminders">
+                    <!-- Daily Expense Logging -->
+                    <div class="reminder-card">
+                        <div class="reminder-header">
+                            <h5><i class="bi bi-calendar-day"></i> Daily Expense Logging</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input preset-toggle" type="checkbox" id="dailyExpense" data-type="daily-expense">
+                                <label class="form-check-label" for="dailyExpense"></label>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Get a friendly nudge to log your spending each day at 8 PM</p>
+                        <div class="preset-message">💸 "Hey 👋 have you tracked your spending today?"</div>
+                        <div class="time-select">
+                            <label>Reminder Time:</label>
+                            <input type="time" class="form-control form-control-sm preset-time" id="dailyExpenseTime" value="20:00">
+                        </div>
+                    </div>
+
+                    <!-- Weekly Budget Check-in -->
+                    <div class="reminder-card">
+                        <div class="reminder-header">
+                            <h5><i class="bi bi-calendar-week"></i> Weekly Budget Check-in</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input preset-toggle" type="checkbox" id="weeklyBudget" data-type="weekly-budget">
+                                <label class="form-check-label" for="weeklyBudget"></label>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Check how your spending is going every Sunday at 10 AM</p>
+                        <div class="preset-message">📊 "Just a quick check-in — how's your budget going?"</div>
+                        <div class="time-day-select">
+                            <label>Reminder Day & Time:</label>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm preset-day" id="weeklyBudgetDay">
+                                    <option value="0">Sunday</option>
+                                    <option value="1">Monday</option>
+                                    <option value="2">Tuesday</option>
+                                    <option value="3">Wednesday</option>
+                                    <option value="4">Thursday</option>
+                                    <option value="5">Friday</option>
+                                    <option value="6">Saturday</option>
+                                </select>
+                                <input type="time" class="form-control form-control-sm preset-time" id="weeklyBudgetTime" value="10:00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Savings Review -->
+                    <div class="reminder-card">
+                        <div class="reminder-header">
+                            <h5><i class="bi bi-calendar-month"></i> Monthly Savings Review</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input preset-toggle" type="checkbox" id="monthlySavings" data-type="monthly-savings">
+                                <label class="form-check-label" for="monthlySavings"></label>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Celebrate your progress on the 1st of every month</p>
+                        <div class="preset-message">💙 "Small savings today = big goals tomorrow 💙"</div>
+                        <div class="time-select">
+                            <label>Reminder Time:</label>
+                            <input type="time" class="form-control form-control-sm preset-time" id="monthlySavingsTime" value="09:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Custom Reminders -->
+            <div class="col-lg-6 mb-4">
+                <h3 class="mb-4">✏️ Create Custom Reminder</h3>
+                
+                <div class="card reminder-form-card p-4">
+                    <form id="customReminderForm">
+                        <div class="mb-3">
+                            <label for="reminderTitle" class="form-label">Reminder Title</label>
+                            <input type="text" class="form-control" id="reminderTitle" placeholder="e.g., Pay rent" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reminderMessage" class="form-label">Reminder Message</label>
+                            <textarea class="form-control" id="reminderMessage" rows="3" placeholder="Your friendly reminder message..." required></textarea>
+                            <small class="text-muted">Tip: Add emojis to make it friendly! 😊</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reminderFrequency" class="form-label">Frequency</label>
+                            <select class="form-select" id="reminderFrequency" required>
+                                <option value="">Select frequency...</option>
+                                <option value="once">Once (One-time)</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reminderTime" class="form-label">Time</label>
+                            <input type="time" class="form-control" id="reminderTime" required>
+                        </div>
+
+                        <div class="mb-3" id="reminderDayContainer" style="display:none;">
+                            <label for="reminderDay" class="form-label">Day of Week</label>
+                            <select class="form-select" id="reminderDay">
+                                <option value="0">Sunday</option>
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">➕ Add Reminder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Reminders List -->
+        <section class="mt-5">
+            <h3 class="mb-4">📋 Your Active Reminders</h3>
+            <div id="activeRemindersList" class="reminders-list">
+                <p class="text-center text-muted">No reminders set yet. Start by enabling a quick setup above! 🎯</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center text-muted small">
+            © 2026 BudgetBuddy · Built by R.E.G Innovators · All rights reserved
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/JS/reminders.js"></script>
+    <script src="/JS/notifications.js"></script>
+    <script src="/JS/reminder-scheduler.js"></script>
+</body>
+</html>
